@@ -31,11 +31,16 @@ ENV PATH=$PATH:/opt/ga-beacon/bin
 
 WORKDIR /opt/ga-beacon/bin
 
-COPY --from=build-stage /gopath/src/github.com/zincio/ga-beacon/bin/ga-beacon /opt/ga-beacon/bin/
-RUN chmod +x /opt/ga-beacon/bin/ga-beacon
+RUN mkdir -p /opt/ga-beacon/bin/static && mkdir -p /opt/ga-beacon/bin/ga-beacon
+
+COPY --from=build-stage /gopath/src/github.com/zincio/ga-beacon/bin/ga-beacon-standalone /opt/ga-beacon/bin/
+COPY --from=build-stage /gopath/src/github.com/zincio/ga-beacon/ga-beacon/page.html /opt/ga-beacon/bin/ga-beacon/
+COPY --from=build-stage /gopath/src/github.com/zincio/ga-beacon/static/. /opt/ga-beacon/bin/static/
+
+RUN chmod +x /opt/ga-beacon/bin/ga-beacon-standalone
 
 EXPOSE 9001
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 --start-period=15s \
     CMD curl -f http://localhost:9001
 
-CMD /opt/ga-beacon/bin/ga-beacon
+CMD /opt/ga-beacon/bin/ga-beacon-standalone
