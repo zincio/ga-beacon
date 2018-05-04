@@ -1,0 +1,10 @@
+Dockerfile
+Makefile
+.git
+LICENSE
+README.md
+.dockerignore
+.gitignore
+*.log
+*.pid
+ga-beacon
